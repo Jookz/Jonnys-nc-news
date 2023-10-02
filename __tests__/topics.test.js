@@ -37,5 +37,10 @@ describe('GET /api/topics', () => {
             });
         })
     });
-    
+});
+
+describe('GET /api/articles', () => {
+    it('should return status code 200', () => {
+        return request(app).get('/api/topics').expect(200);
+    });
 });
