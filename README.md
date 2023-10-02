@@ -1,3 +1,3 @@
 # Northcoders News API
 
-For instructions, please head over to [L2C NC News](https://l2c.northcoders.com/courses/be/nc-news).
+To access to two databses locally, please create .env.development and .env.test files.
