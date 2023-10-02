@@ -1,4 +1,5 @@
 const { fetchTopics } = require('../models/topics.model.js');
+const endpoints = require('../endpoints.json');
 
 exports.getTopics = (req, res, next) => {
     const path = req.route.path;
@@ -8,4 +9,8 @@ exports.getTopics = (req, res, next) => {
     .catch((err) => {
         next(err);
     })
+}
+
+exports.getEndpoints = (req, res, next) => {
+    res.status(200).send({endpoints});
 }
