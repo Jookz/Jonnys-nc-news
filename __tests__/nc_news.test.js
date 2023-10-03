@@ -49,6 +49,43 @@ describe('GET /api/topics', () => {
     
 });
 
+describe('GET /api/articles', () => {
+    it('GET:200 should return status code 200', () => {
+        return request(app).get('/api/articles').expect(200);
+    });
+    it('GET:200 should respond with an array of article objects, each with the correct format', () => {
+        return request(app).get('/api/articles').then(({body}) => {
+            expect(body).toHaveLength(13);
+            body.forEach(article => {
+
+                expect(article).toHaveProperty("article_id");
+                expect(article).toHaveProperty("title");
+                expect(article).toHaveProperty("topic");
+                expect(article).toHaveProperty("author");
+                expect(article).toHaveProperty("created_at");
+                expect(article).toHaveProperty("votes");
+                expect(article).toHaveProperty("article_img_url");
+                expect(article).toHaveProperty("comment_count");
+            })
+
+        })
+    });
+    it('GET:200 should order articles by date in descending order', () => {
+        return request(app).get('/api/articles').then(({body}) => {
+            expect(body).toHaveLength(13);
+            expect(body).toBeSortedBy("created_at", {descending: true});
+        })
+    });
+    it('GET:404 should return error if given invalid path', () => {
+        return request(app)
+			.get('/api/words-instead-of-articles')
+			.expect(404)
+			.then((response) => {
+				expect(response.body.msg).toBe('Path not found');
+			});
+    });
+});
+
 describe('GET /api/articles/:article_id', () => {
     it('GET:200 should return status code 200', () => {
         return request(app).get('/api/articles/1').expect(200);

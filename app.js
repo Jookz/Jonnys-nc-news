@@ -8,8 +8,9 @@ app.get('/api', getEndpoints)
 
 app.get('/api/topics', getTopics);
 
-app.get('/api/articles/:article_id', getArticleId)
+app.get('/api/articles', getArticles)
 
+app.get('/api/articles/:article_id', getArticleId)
 
 app.all('/*',(req, res)=>{
     res.status(404).send({msg: "Path not found"})
