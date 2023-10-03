@@ -68,7 +68,7 @@ describe('GET /api/articles/:article_id', () => {
 				expect(response.body.msg).toBe('Article ID not found');
 			});
     });
-    it.only('GET:400 should return error if given invalid article ID', () => {
+    it('GET:400 should return error if given invalid article ID', () => {
         return request(app)
 			.get('/api/articles/hamsandwich')
 			.expect(400)
