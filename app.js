@@ -1,5 +1,6 @@
 const express = require('express')
 const { getTopics, getArticleId } = require('./controllers/topics.controller.js');
+const { handle500Errors, handleCustomErrors, handlePsqlErrors} = require('./controllers/errors.controller.js');
 
 const app = express();
 
@@ -13,17 +14,11 @@ app.all('/*',(req, res)=>{
 });
 
 
-app.use((err, req, res, next) => {
-	if (err.status && err.msg) {
-		res.status(err.status).send({ msg: err.msg });
-	} else {
-		next(err);
-	}
-});
+app.use(handleCustomErrors);
 
-app.use((err, req, res, next) => {
-	res.status(400).send({ msg: 'Bad request' });
-});
+app.use(handlePsqlErrors);
+
+app.use(handle500Errors);
 
 
 module.exports = app;

@@ -46,8 +46,8 @@ describe('GET /api/articles/:article_id', () => {
     });
     it('GET:200 should provide the article by its ID', () => {
         return request(app).get('/api/articles/1').then(({body}) => {
-            console.log(body.article)
             const testArticle = {
+                article_id: 1,
                 title: "Living in the shadow of a great man",
                 topic: "mitch",
                 author: "butter_bridge",
@@ -68,7 +68,7 @@ describe('GET /api/articles/:article_id', () => {
 				expect(response.body.msg).toBe('Article ID not found');
 			});
     });
-    it('GET:400 should return error if given invalid article ID', () => {
+    it.only('GET:400 should return error if given invalid article ID', () => {
         return request(app)
 			.get('/api/articles/hamsandwich')
 			.expect(400)

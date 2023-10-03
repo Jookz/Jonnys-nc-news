@@ -5,6 +5,9 @@ exports.getTopics = (req, res, next) => {
     fetchTopics(path).then((result) => {
         res.status(200).send({topics: result.rows});
     })
+    .catch((err) => {
+        next(err);
+    })
 }
 
 exports.getArticleId = (req, res, next) => {
