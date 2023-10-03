@@ -94,6 +94,7 @@ describe('GET /api/articles/:article_id/comments', () => {
     it('GET:200 should provide all comments for specified article in correct format', () => {
         return request(app).get("/api/articles/1/comments").then(({body}) => {
             expect(body).toHaveLength(11);
+            console.log(body)
             body.forEach(comment => {
                 expect(comment).toHaveProperty("comment_id");
                 expect(comment).toHaveProperty("votes");
