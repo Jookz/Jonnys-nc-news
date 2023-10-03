@@ -1,4 +1,4 @@
-const { fetchTopics, fetchArticleId } = require('../models/topics.model.js');
+const { fetchTopics, fetchArticleId, fetchComments } = require('../models/topics.model.js');
 const endpoints = require('../endpoints.json');
 
 exports.getTopics = (req, res, next) => {
@@ -24,8 +24,13 @@ exports.getEndpoints = (req, res, next) => {
 }
 
 exports.getComments = (req, res, next) => {
-    console.log("controller")
-    res.status(200).send();
+    const article_id = req.params.article_id;
+    fetchComments(article_id).then(({rows}) => {
+        res.status(200).send(rows);
+    })
+    .catch(err => {
+        next(err);
+    })
 }
 
 

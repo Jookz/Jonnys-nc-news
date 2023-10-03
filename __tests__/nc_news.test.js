@@ -87,8 +87,42 @@ describe('GET /api/articles/:article_id', () => {
     });
 });
 
-// describe.only('GET /api/articles/:article_id/comments', () => {
-//     it('GET:200 should return 200 status code', () => {
-//         return request(app).get("api/articles/1/comments").expect(200);
-//     });
-// });
+describe('GET /api/articles/:article_id/comments', () => {
+    it('GET:200 should return 200 status code', () => {
+        return request(app).get("/api/articles/1/comments").expect(200);
+    });
+    it('GET:200 should provide all comments for specified article in correct format', () => {
+        return request(app).get("/api/articles/1/comments").then(({body}) => {
+            expect(body).toHaveLength(11);
+            body.forEach(comment => {
+                expect(comment).toHaveProperty("comment_id");
+                expect(comment).toHaveProperty("votes");
+                expect(comment).toHaveProperty("created_at");
+                expect(comment).toHaveProperty("author");
+                expect(comment).toHaveProperty("body");
+                expect(comment).toHaveProperty("article_id");
+            })
+        })
+    });
+    it('GET:200 should return most recent comments first', () => {
+        return request(app).get("/api/articles/1/comments").then(({body}) => {
+            expect(body).toBeSortedBy("created_at", {descending: true})
+        })
+    });
+    it('GET:404 should return error if article ID is valid but doesnt exist', () => {
+        return request(app)
+			.get('/api/articles/9999/comments')
+			.expect(404)
+			.then((response) => {
+				expect(response.body.msg).toBe('Article ID not found');
+			});
+    });
+    it('GET:400 should return error if given invalid article ID', () => {
+        return request(app)
+			.get('/api/articles/hamsandwich/comments')
+			.expect(400)
+			.then((response) => {
+				expect(response.body.msg).toBe('Bad request');
+			});
+    });
+});
