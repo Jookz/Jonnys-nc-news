@@ -23,4 +23,9 @@ exports.getEndpoints = (req, res, next) => {
     res.status(200).send({endpoints});
 }
 
+exports.getComments = (req, res, next) => {
+    console.log("controller")
+    res.status(200).send();
+}
+
 

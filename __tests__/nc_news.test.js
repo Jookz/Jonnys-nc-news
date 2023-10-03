@@ -86,3 +86,9 @@ describe('GET /api/articles/:article_id', () => {
 			});
     });
 });
+
+// describe.only('GET /api/articles/:article_id/comments', () => {
+//     it('GET:200 should return 200 status code', () => {
+//         return request(app).get("api/articles/1/comments").expect(200);
+//     });
+// });
