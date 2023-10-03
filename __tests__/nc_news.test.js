@@ -3,6 +3,7 @@ const app = require("../app.js");
 const db = require('../db/connection.js');
 const data = require('../db/data/test-data/index.js');
 const seed = require('../db/seeds/seed.js');
+const endpoints = require('../endpoints.json');
 
 beforeEach(() => {
 	return seed(data);
@@ -20,6 +21,14 @@ describe('GET /api', () => {
 			.then(({body}) => {
 				expect(body.msg).toBe('Path not found');
 			});
+    });
+    it('GET:200 should return status code 200 when path is valid', () => {
+        return request(app).get('/api/topics').expect(200);
+    });
+    it('should provide description of all endpoints available', () => {
+        return request(app).get('/api').then(({body}) => {
+            expect(body.endpoints).toMatchObject(endpoints);
+        });
     });
 });
 
