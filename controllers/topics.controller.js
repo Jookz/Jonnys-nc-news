@@ -18,3 +18,4 @@ exports.getEndpoints = (req, res, next) => {
 exports.getArticleId = () => {
     
 }
+

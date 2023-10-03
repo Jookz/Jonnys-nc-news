@@ -1,5 +1,5 @@
 const express = require('express')
-const { getTopics, getEndpoints, getArticleId } = require('./controllers/topics.controller.js');
+const { getTopics, getEndpoints, getArticleId, getArticles } = require('./controllers/topics.controller.js');
 
 const app = express();
 
