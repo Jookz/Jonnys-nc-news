@@ -124,4 +124,48 @@ describe('POST, /api/articles/:article_id/comments', () => {
             expect(body.msg).toBe("Bad request");
         })
     });
+    it('POST:201 should ignore unecessary additional properties', () => {
+        return request(app)
+        .post('/api/articles/1/comments')
+        .send({
+            username: "icellusedkars",
+            body: "Enjoyed it",
+            extra: "Extra thing",
+            extra2: "another one"
+        })
+        .expect(201)
+        .then(({body}) => {
+            expect(body.comment).toHaveProperty("comment_id");
+            expect(body.comment).toHaveProperty("body");
+            expect(body.comment).toHaveProperty("article_id");
+            expect(body.comment).toHaveProperty("author");
+            expect(body.comment).toHaveProperty("votes");
+            expect(body.comment).toHaveProperty("created_at");
+
+        })
+    });
+    it('POST:404 should return error if article ID does not exist', () => {
+        return request(app)
+			.post('/api/articles/9999/comments')
+            .send({
+                username: "icellusedkars",
+                body: "Enjoyed it"
+            })
+			.expect(404)
+			.then((response) => {
+				expect(response.body.msg).toBe('Article ID not found');
+			});
+    });
+    it('POST:400 should return error if given invalid article ID', () => {
+        return request(app)
+			.post('/api/articles/hamsandwich/comments')
+            .send({
+                username: "icellusedkars",
+                body: "Enjoyed it"
+            })
+			.expect(400)
+			.then((response) => {
+				expect(response.body.msg).toBe('Bad request');
+			});
+    });
 });
