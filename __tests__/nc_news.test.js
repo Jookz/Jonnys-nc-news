@@ -125,7 +125,7 @@ describe('GET /api/articles/:article_id', () => {
 });
 
 
-describe('POST, /api/articles/:article_id/comments', () => {
+describe.only('POST, /api/articles/:article_id/comments', () => {
     it('POST:201 should return correct status code', () => {
         return request(app).post('/api/articles/1/comments')
         .send({
@@ -190,7 +190,7 @@ describe('POST, /api/articles/:article_id/comments', () => {
             })
 			.expect(404)
 			.then((response) => {
-				expect(response.body.msg).toBe('Article ID not found');
+				expect(response.body.msg).toBe('Entry not found');
 			});
     });
     it('POST:400 should return error if given invalid article ID', () => {
@@ -203,6 +203,18 @@ describe('POST, /api/articles/:article_id/comments', () => {
 			.expect(400)
 			.then((response) => {
 				expect(response.body.msg).toBe('Bad request');
+			});
+    });
+    it('POST:404 should return error if username does not exist', () => {
+        return request(app)
+			.post('/api/articles/1/comments')
+            .send({
+                username: "BabeRuth",
+                body: "Enjoyed it"
+            })
+			.expect(404)
+			.then((response) => {
+				expect(response.body.msg).toBe('Entry not found');
 			});
     });
 });

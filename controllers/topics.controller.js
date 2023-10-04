@@ -1,5 +1,6 @@
 const { fetchTopics, fetchArticles, fetchArticleId, insertComment } = require('../models/topics.model.js');
 const endpoints = require('../endpoints.json');
+const { error } = require('console');
 
 exports.getTopics = (req, res, next) => {
     const path = req.route.path;
@@ -34,6 +35,7 @@ exports.postComment = (req, res, next) => {
         res.status(201).send({comment});
     })
     .catch(err => {
+        console.log(err)
         next(err)
     })
 }
