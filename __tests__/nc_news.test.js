@@ -125,7 +125,7 @@ describe('GET /api/articles/:article_id', () => {
 });
 
 
-describe.only('POST, /api/articles/:article_id/comments', () => {
+describe('POST, /api/articles/:article_id/comments', () => {
     it('POST:201 should return correct status code', () => {
         return request(app).post('/api/articles/1/comments')
         .send({
@@ -216,5 +216,84 @@ describe.only('POST, /api/articles/:article_id/comments', () => {
 			.then((response) => {
 				expect(response.body.msg).toBe('Entry not found');
 			});
+    });
+});
+
+describe('PATCH, /api/articles/:article_id', () => {
+    it('PATCH:201 should return 201 status code', () => {
+		return request(app)
+			.patch('/api/articles/1')
+			.send({inc_votes: 1})
+			.expect(201);
+	});
+    it('PATCH:201 should increment votes of passed article by the amount given in the req', () => {
+		return request(app)
+			.patch('/api/articles/1')
+			.send({inc_votes: 2})
+			.then(({body}) => {
+                const templateArticle = {
+                    article_id: 1,
+                    title: 'Living in the shadow of a great man',
+                    topic: 'mitch',
+                    author: 'butter_bridge',
+                    body: 'I find this existence challenging',
+                    created_at: '2020-07-09T20:11:00.000Z',
+                    votes: 102,
+                    article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+                  }
+               expect(body.updated_article).toMatchObject(templateArticle);
+            })
+	});
+    it('PATCH:404 should return error if article ID does not exist', () => {
+        return request(app)
+			.patch('/api/articles/9999')
+            .send({ inc_votes: 2 })
+			.expect(404)
+			.then((response) => {
+				expect(response.body.msg).toBe('Entry not found');
+			});
+    });
+    it('PATCH:400 should return error if given invalid article ID', () => {
+        return request(app)
+			.patch('/api/articles/hamsandwich')
+            .send({ inc_votes: 2 })
+			.expect(400)
+			.then((response) => {
+				expect(response.body.msg).toBe('Bad request');
+			});
+    });
+    it('PATCH:400 should return error if given improperly formatted req', () => {
+        return request(app)
+			.patch('/api/articles/1')
+            .send({ inc_votes: "ello" })
+			.expect(400)
+			.then((response) => {
+				expect(response.body.msg).toBe('Bad request');
+			});
+    });
+    it('PATCH:201 should ignore unecessary additional properties', () => {
+        return request(app)
+        .patch('/api/articles/1')
+        .send({
+            inc_votes: 3, 
+            extra: 500,
+            extra2: "Hello fellow youngsters"
+        })
+        .then(({body}) => {
+            const templateArticle =    {
+                  article_id: 1,
+                  title: 'Living in the shadow of a great man',
+                  topic: 'mitch',
+                  author: 'butter_bridge',
+                  body: 'I find this existence challenging',
+                  created_at: '2020-07-09T20:11:00.000Z',
+                  votes: 103,
+                  article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+                }
+            const article = body.updated_article;
+            expect(article).toMatchObject(templateArticle);
+            
+
+        })
     });
 });

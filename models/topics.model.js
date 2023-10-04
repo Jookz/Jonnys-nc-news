@@ -1,3 +1,4 @@
+const { response } = require('../app.js');
 const db = require('../db/connection.js');
 const format = require('pg-format');
 
@@ -51,3 +52,19 @@ exports.fetchArticles = () => {
     `
     return db.query(query);
 };
+
+exports.editArticle = ({inc_votes}, article_id) => {
+    const query = `
+    UPDATE articles
+    SET votes = votes + $1
+    WHERE article_id = $2
+    RETURNING *
+    `
+    return db.query(query, [inc_votes, article_id])
+    .then((result) => {
+        if(result.rows.length === 0){
+            return Promise.reject({ status: 404, msg: "Entry not found" })
+        }
+        return result;
+    })
+}
