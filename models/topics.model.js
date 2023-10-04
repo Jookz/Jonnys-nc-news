@@ -22,3 +22,21 @@ exports.fetchArticleId = (articleId) => {
         return result;
     })
 }
+
+exports.insertComment = (commentBody, article_id) => {
+    const { username, body } = commentBody;
+    const newArticle_id = parseInt(article_id);
+
+    const query = `
+    INSERT INTO comments
+    (body, author, article_id)
+    VALUES
+    ($1, $2, $3)
+    RETURNING *
+    ;
+    `
+    return db.query(query, [body, username, newArticle_id])
+    .then(({rows}) => {
+        return rows[0];
+    })
+}

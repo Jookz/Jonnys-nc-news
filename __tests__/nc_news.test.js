@@ -86,3 +86,42 @@ describe('GET /api/articles/:article_id', () => {
 			});
     });
 });
+
+
+describe.only('POST, /api/articles/:article_id/comments', () => {
+    it('POST:201 should return correct status code', () => {
+        return request(app).post('/api/articles/1/comments')
+        .send({
+            username: "icellusedkars",
+            body: "Enjoyed it"
+        })
+        .expect(201);
+    });
+    it('POST:201 should post new comment and return comment with confirmation', () => {
+        return request(app).post('/api/articles/1/comments')
+        .send({
+            username: "icellusedkars",
+            body: "Enjoyed it"
+        })
+        .then(({body}) => {
+            expect(body.comment).toHaveProperty("comment_id");
+            expect(body.comment).toHaveProperty("body");
+            expect(body.comment).toHaveProperty("article_id");
+            expect(body.comment).toHaveProperty("author");
+            expect(body.comment).toHaveProperty("votes");
+            expect(body.comment).toHaveProperty("created_at");
+
+        })
+    });
+    it('POST:400 should give error when passed object with incorrect format', () => {
+        return request(app).post('/api/articles/1/comments')
+        .send({
+            name: "icellusedkars",
+            body: "Enjoyed it"
+        })
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("Bad request");
+        })
+    });
+});
