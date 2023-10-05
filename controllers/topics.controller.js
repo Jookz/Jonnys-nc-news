@@ -1,4 +1,4 @@
-const { fetchTopics, fetchArticles, fetchArticleId, insertComment, editArticle, removeComment } = require('../models/topics.model.js');
+const { fetchTopics, fetchArticles, fetchArticleId, fetchComments, insertComment, editArticle, removeComment } = require('../models/topics.model.js');
 const endpoints = require('../endpoints.json');
 const { error } = require('console');
 
@@ -27,6 +27,19 @@ exports.getArticles = (req, res, next) => {
     fetchArticles().then(({rows}) => {
         res.status(200).send(rows);
     })
+}
+
+exports.getComments = (req, res, next) => {
+    const article_id = req.params.article_id;
+    const promises = [fetchComments(article_id), fetchArticleId(article_id)];
+
+    Promise.all(promises)
+    .then((response) => {
+        res.status(200).send(response[0].rows);
+    })
+    .catch(err => {
+        next(err);
+    });
 }
 
 exports.postComment = (req, res, next) => {
