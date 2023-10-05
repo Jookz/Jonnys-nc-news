@@ -298,7 +298,7 @@ describe('PATCH, /api/articles/:article_id', () => {
     });
 });
 
-describe.only('DELETE /api/comments/:comment_id', () => {
+describe('DELETE /api/comments/:comment_id', () => {
     it('DELETE:204 should return 204 status code', () => {
 		return request(app).delete('/api/comments/1').expect(204);
 	});
