@@ -30,15 +30,20 @@ exports.getArticles = (req, res, next) => {
 
 exports.getComments = (req, res, next) => {
     const article_id = req.params.article_id;
-    const promises = [];
-    // if(article_id) promises.push(fetchComments(article_id))
+    const promises = [fetchComments(article_id)];
 
-    fetchComments(article_id).then(({rows}) => {
-        res.status(200).send(rows);
+    
+    if(article_id) {
+        promises.push(fetchArticleId(article_id));
+    }
+
+    Promise.all(promises)
+    .then((response) => {
+        res.status(200).send(response[0].rows);
     })
     .catch(err => {
         next(err);
-    })
+    });
 }
 
 

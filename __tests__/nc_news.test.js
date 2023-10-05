@@ -146,11 +146,11 @@ describe('GET /api/articles/:article_id/comments', () => {
             expect(body).toBeSortedBy("created_at", {descending: true})
         })
     });
-    // it.only('GET:200 should return an empty array if article ID exists but has no comments', () => {
-    //     return request(app).get("/api/articles/2/comments").then(({body}) => {
-    //         expect(body).toEqual([]);
-    //     })
-    // });
+    it('GET:200 should return an empty array if article ID exists but has no comments', () => {
+        return request(app).get("/api/articles/2/comments").then(({body}) => {
+            expect(body).toEqual([]);
+        })
+    });
     it('GET:404 should return error if article ID is valid but doesnt exist', () => {
         return request(app)
 			.get('/api/articles/9999/comments')
