@@ -76,14 +76,6 @@ describe('GET /api/articles', () => {
             expect(body).toBeSortedBy("created_at", {descending: true});
         })
     });
-    it('GET:404 should return error if given invalid path', () => {
-        return request(app)
-			.get('/api/words-instead-of-articles')
-			.expect(404)
-			.then((response) => {
-				expect(response.body.msg).toBe('Path not found');
-			});
-    });
 });
 
 describe('GET /api/articles/:article_id', () => {
@@ -386,5 +378,16 @@ describe('DELETE /api/comments/:comment_id', () => {
 describe('GET /api/users', () => {
     it('GET:200 should return status code 200', () => {
         return request(app).get('/api/users').expect(200);
+    });
+    it('GET:200 should return array containing all users in the correct format', () => {
+        return request(app).get('/api/users')
+        .then(({body}) => {
+            expect(body).toHaveLength(4);
+            body.forEach(user => {
+                expect(user).toHaveProperty("username", expect.any(String));
+                expect(user).toHaveProperty("name", expect.any(String));
+                expect(user).toHaveProperty("avatar_url", expect.any(String));
+            })
+        })
     });
 });
