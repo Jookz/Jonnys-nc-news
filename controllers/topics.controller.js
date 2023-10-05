@@ -1,5 +1,6 @@
-const { fetchTopics, fetchArticles, fetchArticleId } = require('../models/topics.model.js');
+const { fetchTopics, fetchArticles, fetchArticleId, insertComment, editArticle, removeComment } = require('../models/topics.model.js');
 const endpoints = require('../endpoints.json');
+const { error } = require('console');
 
 exports.getTopics = (req, res, next) => {
     const path = req.route.path;
@@ -25,6 +26,36 @@ exports.getEndpoints = (req, res, next) => {
 exports.getArticles = (req, res, next) => {
     fetchArticles().then(({rows}) => {
         res.status(200).send(rows);
+    })
+}
+
+exports.postComment = (req, res, next) => {
+    const article_id = req.params.article_id;
+    insertComment(req.body, article_id).then((comment) => {
+        res.status(201).send({comment});
+    })
+    .catch(err => {
+        next(err)
+    })
+}
+
+exports.patchArticle = (req, res, next) => {
+    const article_id = req.params.article_id;
+    editArticle(req.body, article_id).then((response) => {
+        res.status(201).send({updated_article: response.rows[0]});
+    })
+    .catch((err) => {
+        next(err);
+    })
+}
+
+exports.deleteComment = (req, res, next) => {
+    const {comment_id} = req.params;
+    removeComment(comment_id).then(() => {
+        res.status(204).send();
+    })
+    .catch(err => {
+        next(err);
     })
 }
 
