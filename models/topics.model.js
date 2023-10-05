@@ -2,11 +2,25 @@ const { response } = require('../app.js');
 const db = require('../db/connection.js');
 const format = require('pg-format');
 
-exports.fetchTopics = (path) => {
-
-    return db.query(`
-    SELECT * FROM topics;
-    `);
+exports.fetchTopics = (topic) => {
+    const array = [];
+    let query = `
+    SELECT * FROM topics 
+    `
+    if(topic){
+        query += `
+        WHERE slug = $1
+        `
+        array.push(topic)
+    }
+    query += `;`
+    return db.query(query, array)
+    .then((result) => {
+        if(result.rows.length === 0){
+            return Promise.reject({ status: 404, msg: "Topic not found"})
+        }
+        return result;
+    });
 };
 exports.fetchArticleId = (articleId) => {
 
@@ -53,16 +67,28 @@ exports.insertComment = (commentBody, article_id) => {
     })
 };
 
-exports.fetchArticles = () => {
-    const query = `
+exports.fetchArticles = (topic) => {
+    const array = [];
+
+    let query = `
     SELECT articles.article_id, title, topic, articles.author, articles.created_at, article_img_url, CAST(COUNT(comments.article_id) AS INT) AS comment_count, SUM(comments.votes) AS votes
     FROM articles
     LEFT JOIN comments 
-    ON articles.article_id = comments.article_id
+    ON articles.article_id = comments.article_id`
+
+    if(topic){
+        query += `
+        WHERE topic = $1
+        `
+        array.push(topic);
+    }
+
+    query += `
     GROUP BY articles.article_id, comments.article_id
     ORDER BY articles.created_at DESC;
     `
-    return db.query(query);
+
+    return db.query(query, array);
 };
 
 exports.editArticle = ({inc_votes}, article_id) => {
