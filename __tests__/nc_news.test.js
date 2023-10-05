@@ -342,3 +342,9 @@ describe('DELETE /api/comments/:comment_id', () => {
 			});
 	});
 });
+
+describe.only('GET /api/users', () => {
+    it('GET:200 should return status code 200', () => {
+        return request(app).get('/api/users').expect(200);
+    });
+});

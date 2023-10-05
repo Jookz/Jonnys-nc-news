@@ -1,4 +1,4 @@
-const { fetchTopics, fetchArticles, fetchArticleId, insertComment, editArticle, removeComment } = require('../models/topics.model.js');
+const { fetchUsers, fetchTopics, fetchArticles, fetchArticleId, insertComment, editArticle, removeComment } = require('../models/topics.model.js');
 const endpoints = require('../endpoints.json');
 const { error } = require('console');
 
@@ -57,6 +57,11 @@ exports.deleteComment = (req, res, next) => {
     .catch(err => {
         next(err);
     })
+};
+
+exports.getUsers = (req, res, next) => {
+    //fetchUsers()
+    res.status(200).send();
 }
 
 

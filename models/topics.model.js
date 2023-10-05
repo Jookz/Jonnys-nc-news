@@ -88,3 +88,7 @@ exports.removeComment = (comment_id) => {
 		return result;
 	});
 };
+
+exports.fetchUsers = () => {
+
+}
