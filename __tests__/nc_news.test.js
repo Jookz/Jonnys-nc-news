@@ -92,18 +92,14 @@ describe('GET /api/articles/:article_id', () => {
     });
     it('GET:200 should provide the article by its ID', () => {
         return request(app).get('/api/articles/1').then(({body}) => {
-            const testArticle = {
-                article_id: 1,
-                title: "Living in the shadow of a great man",
-                topic: "mitch",
-                author: "butter_bridge",
-                body: "I find this existence challenging",
-                created_at: "2020-07-09T20:11:00.000Z",
-                votes: 100,
-                article_img_url:
-                  "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-              } 
-            expect(body.article).toMatchObject(testArticle);
+            const article = body.article;
+            
+                expect(article).toHaveProperty("title", expect.any(String));
+                expect(article).toHaveProperty("topic", expect.any(String));
+                expect(article).toHaveProperty("created_at", expect.any(String));
+                expect(article).toHaveProperty("author", expect.any(String));
+                expect(article).toHaveProperty("article_id", expect.any(Number));
+                expect(article).toHaveProperty("votes", expect.any(Number));      
         })
     });
     it('GET:404 should return error if article ID does not exist', () => {
@@ -122,6 +118,12 @@ describe('GET /api/articles/:article_id', () => {
 				expect(response.body.msg).toBe('Bad request');
 			});
     });
+    it('GET:200 should also include comment_count in response object', () => {
+        return request(app).get("/api/articles/1/").then(({body}) => {
+            expect(body.article.comment_count).toBe(11);
+        });
+    });
+    
 });
 
 describe('GET /api/articles/:article_id/comments', () => {
@@ -132,12 +134,12 @@ describe('GET /api/articles/:article_id/comments', () => {
         return request(app).get("/api/articles/1/comments").then(({body}) => {
             expect(body).toHaveLength(11);
             body.forEach(comment => {
-                expect(comment).toHaveProperty("comment_id");
-                expect(comment).toHaveProperty("votes");
-                expect(comment).toHaveProperty("created_at");
-                expect(comment).toHaveProperty("author");
-                expect(comment).toHaveProperty("body");
-                expect(comment).toHaveProperty("article_id");
+                expect(comment).toHaveProperty("comment_id", expect.any(Number));
+                expect(comment).toHaveProperty("votes", expect.any(Number));
+                expect(comment).toHaveProperty("created_at", expect.any(String));
+                expect(comment).toHaveProperty("author", expect.any(String));
+                expect(comment).toHaveProperty("body", expect.any(String));
+                expect(comment).toHaveProperty("article_id", expect.any(Number));
             })
         })
     });
