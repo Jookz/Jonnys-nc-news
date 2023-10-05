@@ -297,3 +297,44 @@ describe('PATCH, /api/articles/:article_id', () => {
         })
     });
 });
+
+describe.only('DELETE /api/comments/:comment_id', () => {
+    it('DELETE:204 should return 204 status code', () => {
+		return request(app).delete('/api/comments/1').expect(204);
+	});
+    it('DELETE:204 should delete the given comment from the database', () => {
+        return request(app).delete('/api/comments/10')
+        .then(() => {
+            return request(app).get('/api/articles')
+        })
+        .then(({body}) => {
+            const articleAfterDeletion = {
+                article_id: 3,
+                title: 'Eight pug gifs that remind me of mitch',
+                topic: 'mitch',
+                author: 'icellusedkars',
+                created_at: '2020-11-03T09:12:00.000Z',
+                article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+                comment_count: 1,
+                votes: '0'
+              };
+            expect(body[0]).toMatchObject(articleAfterDeletion);
+        })
+    });
+    it('DELETE:404 should return error if comment does not exist', () => {
+		return request(app)
+			.delete('/api/comments/1000004848')
+			.expect(404)
+			.then((response) => {
+				expect(response.body.msg).toBe('Comment does not exist');
+			});
+	});
+    it('DELETE:400 should return error if treasure_id is not a valid type', () => {
+		return request(app)
+			.delete('/api/comments/batman')
+			.expect(400)
+			.then((response) => {
+				expect(response.body.msg).toBe('Bad request');
+			});
+	});
+});

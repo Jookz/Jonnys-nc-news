@@ -6,10 +6,7 @@
 -- ("body", 0, "author text", 99, 2022-09-20)
 -- RETURNING * ;
 
-UPDATE articles
-    SET votes = votes + 2
-    WHERE article_id = 1
-    RETURNING *;
+SELECT * FROM comments;
 
 -- SELECT comments.article_id, COUNT(*) AS comment_count, SUM(comments.votes) AS votes, articles.title, articles.topic, articles.author, articles.created_at, articles.article_img_url
 -- FROM comments
