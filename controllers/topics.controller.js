@@ -31,12 +31,7 @@ exports.getArticles = (req, res, next) => {
 
 exports.getComments = (req, res, next) => {
     const article_id = req.params.article_id;
-    const promises = [fetchComments(article_id)];
-
-    
-    if(article_id) {
-        promises.push(fetchArticleId(article_id));
-    }
+    const promises = [fetchComments(article_id), fetchArticleId(article_id)];
 
     Promise.all(promises)
     .then((response) => {
