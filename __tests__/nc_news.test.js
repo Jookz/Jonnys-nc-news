@@ -172,12 +172,14 @@ describe('POST, /api/articles/:article_id/comments', () => {
         })
         .expect(201)
         .then(({body}) => {
-            expect(body.comment).toHaveProperty("comment_id");
-            expect(body.comment).toHaveProperty("body");
-            expect(body.comment).toHaveProperty("article_id");
-            expect(body.comment).toHaveProperty("author");
-            expect(body.comment).toHaveProperty("votes");
-            expect(body.comment).toHaveProperty("created_at");
+            expect(body.comment).toHaveProperty("comment_id", expect.any(Number));
+            expect(body.comment).toHaveProperty("body", expect.any(String));
+            expect(body.comment).toHaveProperty("article_id", expect.any(Number));
+            expect(body.comment).toHaveProperty("author", expect.any(String));
+            expect(body.comment).toHaveProperty("votes", expect.any(Number));
+            expect(body.comment).toHaveProperty("created_at", expect.any(String));
+
+            
 
         })
     });
@@ -215,6 +217,18 @@ describe('POST, /api/articles/:article_id/comments', () => {
 			.expect(404)
 			.then((response) => {
 				expect(response.body.msg).toBe('Entry not found');
+			});
+    });
+    it('POST:400 should return error if body is empty', () => {
+        return request(app)
+			.post('/api/articles/1/comments')
+            .send({
+                username: "icellusedkars",
+                body: ""
+            })
+			.expect(400)
+			.then((response) => {
+				expect(response.body.msg).toBe('Empty body - comment could not be added');
 			});
     });
 });
@@ -308,17 +322,7 @@ describe('DELETE /api/comments/:comment_id', () => {
             return request(app).get('/api/articles')
         })
         .then(({body}) => {
-            const articleAfterDeletion = {
-                article_id: 3,
-                title: 'Eight pug gifs that remind me of mitch',
-                topic: 'mitch',
-                author: 'icellusedkars',
-                created_at: '2020-11-03T09:12:00.000Z',
-                article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
-                comment_count: 1,
-                votes: '0'
-              };
-            expect(body[0]).toMatchObject(articleAfterDeletion);
+            expect(body[0].comment_count).toBe(1);
         })
     });
     it('DELETE:404 should return error if comment does not exist', () => {

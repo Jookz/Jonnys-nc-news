@@ -37,6 +37,9 @@ exports.insertComment = (commentBody, article_id) => {
     `
     return db.query(query, [body, username, newArticle_id])
     .then(({rows}) => {
+        if(rows[0].body.length === 0) {
+            return Promise.reject({ status: 400, msg: "Empty body - comment could not be added"})
+        }
         return rows[0];
     })
 };
