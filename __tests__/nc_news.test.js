@@ -70,13 +70,13 @@ describe('GET /api/articles', () => {
 
         })
     });
-    it('GET:200 should order articles by date in descending order', () => {
+    it('GET:200 should order articles by date in descending order as default', () => {
         return request(app).get('/api/articles').then(({body}) => {
             expect(body).toHaveLength(13);
             expect(body).toBeSortedBy("created_at", {descending: true});
         })
     });
-    describe('GET /api/articles?topic', () => {
+    describe('GET /api/articles?topic=:query', () => {
         it('GET:200 should filter articles by the topic stated in the query and return them', () => {
             return request(app).get('/api/articles?topic=cats')
             .then(({body}) => {
@@ -101,8 +101,43 @@ describe('GET /api/articles', () => {
             })
         });
     });
-    describe('GET /api/articles?sort-by', () => {
-        
+    describe('GET /api/articles?:queries', () => {
+        it('GET:200 should sort by any column passed in as query (desc by default)', () => {
+            return request(app).get('/api/articles?sort_by=author')
+            .then(({body}) => {
+                expect(body).toBeSortedBy("author", {descending: true});
+            })
+        });
+        it('GET:200 should allow client to sort response object by ascending', () => {
+            return request(app).get('/api/articles?sort_by=title&order=asc')
+            .then(({body}) => {
+                expect(body).toBeSortedBy("title", {ascending: true});
+            })
+        });
+        it('GET:200 should work alongside topic query', () => {
+            return request(app).get('/api/articles?sort_by=title&order=asc&topic=mitch')
+            .then(({body}) => {
+                expect(body).toHaveLength(12);
+                body.forEach(article => {
+                    expect(article.topic).toBe("mitch");
+                })
+                expect(body).toBeSortedBy("title", {ascending: true});
+            })
+        });
+        it('GET:400 should throw error if sort_by query does not match any column', () => {
+            return request(app).get('/api/articles?sort_by=mongolia')
+            .expect(400)
+            .then(({body}) => {
+                expect(body.msg).toBe("Invalid sort query");
+            })
+        });
+        it('GET:400 should throw error if order query does not match asc or desc', () => {
+            return request(app).get('/api/articles?sort_by=title&order=trebuchet')
+            .expect(400)
+            .then(({body}) => {
+                expect(body.msg).toBe("Invalid order query");
+            })
+        });
     });
 });
 
@@ -395,7 +430,7 @@ describe('DELETE /api/comments/:comment_id', () => {
 				expect(response.body.msg).toBe('Comment does not exist');
 			});
 	});
-    it('DELETE:400 should return error if treasure_id is not a valid type', () => {
+    it('DELETE:400 should return error if comment is not a valid type', () => {
 		return request(app)
 			.delete('/api/comments/batman')
 			.expect(400)
