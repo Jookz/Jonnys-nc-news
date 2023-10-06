@@ -16,6 +16,5 @@ if (ENV === 'production') {
   config.max = 2;
 }
 
-console.log(process.env.PGDATABASE);
 
 module.exports = new Pool(config);

@@ -76,13 +76,30 @@ describe('GET /api/articles', () => {
             expect(body).toBeSortedBy("created_at", {descending: true});
         })
     });
-    it('GET:404 should return error if given invalid path', () => {
-        return request(app)
-			.get('/api/words-instead-of-articles')
-			.expect(404)
-			.then((response) => {
-				expect(response.body.msg).toBe('Path not found');
-			});
+    describe('GET /api/articles?topic', () => {
+        it('GET:200 should filter articles by the topic stated in the query and return them', () => {
+            return request(app).get('/api/articles?topic=cats')
+            .then(({body}) => {
+                expect(body).toHaveLength(1);
+                body.forEach(article => {
+                    expect(article.topic).toBe("cats");
+                })
+            })
+        });
+        it('GET:404 return error if topic does not exist', () => {
+            return request(app).get('/api/articles?topic=roast-chicken')
+            .expect(404)
+            .then(({body}) => {
+                expect(body.msg).toBe("Topic not found");
+            })
+        });
+        it('GET:200 return empty array if topic exists but is not associated with any articles', () => {
+            return request(app).get('/api/articles?topic=paper')
+            .expect(200)
+            .then(({body}) => {
+                expect(body).toEqual([]);
+            })
+        });
     });
 });
 
@@ -387,4 +404,16 @@ describe('GET /api/users', () => {
     it('GET:200 should return status code 200', () => {
         return request(app).get('/api/users').expect(200);
     });
+    it('GET:200 should return array containing all users in the correct format', () => {
+        return request(app).get('/api/users')
+        .then(({body}) => {
+            expect(body).toHaveLength(4);
+            body.forEach(user => {
+                expect(user).toHaveProperty("username", expect.any(String));
+                expect(user).toHaveProperty("name", expect.any(String));
+                expect(user).toHaveProperty("avatar_url", expect.any(String));
+            })
+        })
+    });
 });
+

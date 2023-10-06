@@ -3,8 +3,7 @@ const endpoints = require('../endpoints.json');
 const { error } = require('console');
 
 exports.getTopics = (req, res, next) => {
-    const path = req.route.path;
-    fetchTopics(path).then((result) => {
+    fetchTopics().then((result) => {
         res.status(200).send({topics: result.rows});
     })
     .catch((err) => {
@@ -24,8 +23,16 @@ exports.getEndpoints = (req, res, next) => {
     res.status(200).send({endpoints});
 }
 exports.getArticles = (req, res, next) => {
-    fetchArticles().then(({rows}) => {
-        res.status(200).send(rows);
+    const { topic } = req.query;
+
+    const promises = [fetchArticles(topic), fetchTopics(topic)];
+
+    Promise.all(promises)
+    .then((response) => {
+        res.status(200).send(response[0].rows);
+    })
+    .catch(err => {
+        next(err);
     })
 }
 
@@ -73,8 +80,9 @@ exports.deleteComment = (req, res, next) => {
 };
 
 exports.getUsers = (req, res, next) => {
-    //fetchUsers()
-    res.status(200).send();
+    fetchUsers().then(({rows}) => {
+        res.status(200).send(rows);
+    })
 }
 
 
