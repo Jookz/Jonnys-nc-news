@@ -10,13 +10,6 @@ exports.fetchTopics = (path) => {
 };
 exports.fetchArticleId = (articleId) => {
 
-    // const query = `
-    // SELECT articles.title, articles.topic, articles.author, articles.body, articles.created_at, articles.votes, articles.article_img_url, comments. 
-    // FROM articles
-    // WHERE articles.article_id = $1
-    // JOIN comments;
-    // `
-
     const query = `
     SELECT articles.article_id, title, topic, articles.author, articles.created_at, article_img_url, CAST(COUNT(comments.article_id) AS INT) AS comment_count, articles.votes
     FROM articles
