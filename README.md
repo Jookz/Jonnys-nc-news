@@ -1,19 +1,13 @@
 # Northcoders News API
 
 
-<!-- A link to the hosted version.
-A summary of what the project is.
-Clear instructions of how to clone, install dependencies, seed local database, and run tests.
-Information about how to create the two .env files.
-The minimum versions of Node.js, and Postgres needed to run the project. -->
-
-Hosted version of this server can be found at : postgres://tjovswmd:nQAkuNN_-pcQKPTDQTJTmjEGCijFY0zN@tai.db.elephantsql.com/tjovswmd 
+Hosted version can be found at : https://nc-news-6m81.onrender.com/
 
 To clone this repo, navigate to your desired file and use the command:
 
 git clone https://github.com/Jookz/Jonnys-nc-news
 
-Following this, install necessary dependencies using the commind:
+Following this, install necessary dependencies using the command:
 
 npm i
 
@@ -30,5 +24,5 @@ To access the two databases locally, please create .env.development and .env.tes
 
 Minimum Node and Postgres requirements to run are:
 
-Node
+Node v20.5.1
 Postgres 14.9
