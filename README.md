@@ -3,6 +3,8 @@
 
 Hosted version can be found at : https://nc-news-6m81.onrender.com/
 
+This API has been built for the purpose of accessing application data programmatically. The intention is to mimic a real world backend service (such as Reddit) which should provide this information to the front end architecture.
+
 To clone this repo, navigate to your desired file and use the command:
 
 git clone https://github.com/Jookz/Jonnys-nc-news
