@@ -72,7 +72,17 @@ exports.insertComment = (commentBody, article_id) => {
     })
 };
 
-exports.fetchArticles = (topic) => {
+exports.fetchArticles = (topic, sort_by, order) => {
+    sort_by = sort_by || 'created_at';
+    order = order || "desc";
+
+    if (!['author', 'title', 'topic', 'body', 'votes', 'created_at', 'article_img_url'].includes(sort_by)) {
+        return Promise.reject({ status: 400, msg: 'Invalid sort query' });
+      }
+    if (!['asc', 'desc'].includes(order)) {
+        return Promise.reject({ status: 400, msg: 'Invalid order query' });
+      }
+
     const array = [];
 
     let query = `
@@ -90,8 +100,7 @@ exports.fetchArticles = (topic) => {
 
     query += `
     GROUP BY articles.article_id, comments.article_id
-    ORDER BY articles.created_at DESC;
-    `
+    ORDER BY articles.${sort_by} ${order};`
 
     return db.query(query, array);
 };

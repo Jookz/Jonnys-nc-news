@@ -23,9 +23,8 @@ exports.getEndpoints = (req, res, next) => {
     res.status(200).send({endpoints});
 }
 exports.getArticles = (req, res, next) => {
-    const { topic } = req.query;
-
-    const promises = [fetchArticles(topic), fetchTopics(topic)];
+    const { topic, sort_by, order } = req.query;
+    const promises = [fetchArticles(topic, sort_by, order), fetchTopics(topic)];
 
     Promise.all(promises)
     .then((response) => {
