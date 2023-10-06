@@ -1,4 +1,4 @@
-const { fetchComments, fetchUsers, fetchTopics, fetchArticles, fetchArticleId, insertComment, editArticle, removeComment } = require('../models/topics.model.js');
+const { fetchComments, fetchUsers, fetchTopics, fetchArticles, fetchArticleId, insertComment, editArticle, removeComment } = require('../models/nc_news.model.js');
 const endpoints = require('../endpoints.json');
 const { error } = require('console');
 

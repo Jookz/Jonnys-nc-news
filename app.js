@@ -1,6 +1,6 @@
 const express = require('express')
 const { handle500Errors, handleCustomErrors, handlePsqlErrors} = require('./controllers/errors.controller.js');
-const { getTopics, getEndpoints, getArticleId, getArticles, getComments, postComment, patchArticle, deleteComment, getUsers } = require('./controllers/topics.controller.js');
+const { getTopics, getEndpoints, getArticleId, getArticles, getComments, postComment, patchArticle, deleteComment, getUsers } = require('./controllers/nc_news.controller.js');
 
 const app = express();
 
