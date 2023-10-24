@@ -23,7 +23,7 @@ exports.fetchTopics = (topic) => {
 };
 exports.fetchArticleId = (articleId) => {
   const query = `
-    SELECT articles.article_id, title, topic, articles.author, articles.created_at, article_img_url, CAST(COUNT(comments.article_id) AS INT) AS comment_count, articles.votes
+    SELECT articles.article_id, articles.body, articles.title, articles.topic, articles.author, articles.created_at, articles.article_img_url, CAST(COUNT(comments.article_id) AS INT) AS comment_count, articles.votes
     FROM articles
     LEFT JOIN comments 
     ON articles.article_id = comments.article_id
