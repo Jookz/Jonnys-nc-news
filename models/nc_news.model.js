@@ -111,7 +111,7 @@ exports.fetchArticles = (topic, sort_by, order) => {
 
   query += `
   GROUP BY articles.article_id, articles.body, articles.title, articles.topic, articles.author, articles.created_at, articles.article_img_url, articles.votes
-    ORDER BY articles.${sort_by} ${order};`;
+    ORDER BY ${sort_by} ${order};`;
 
   return db.query(query, array);
 };
