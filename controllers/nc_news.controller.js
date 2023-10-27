@@ -40,6 +40,7 @@ exports.getArticles = (req, res, next) => {
 
   Promise.all(promises)
     .then((response) => {
+      console.log(response);
       res.status(200).send(response[0].rows);
     })
     .catch((err) => {

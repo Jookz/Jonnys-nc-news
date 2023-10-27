@@ -243,7 +243,7 @@ describe("GET /api/articles/:article_id/comments", () => {
   });
 });
 
-describe("POST, /api/articles/:article_id/comments", () => {
+describe("POST /api/articles/:article_id/comments", () => {
   it("POST:201 should return correct status code", () => {
     return request(app)
       .post("/api/articles/1/comments")

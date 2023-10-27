@@ -83,6 +83,7 @@ exports.fetchArticles = (topic, sort_by, order) => {
       "body",
       "votes",
       "created_at",
+      "comment_count",
       "article_img_url",
     ].includes(sort_by)
   ) {
@@ -95,10 +96,11 @@ exports.fetchArticles = (topic, sort_by, order) => {
   const array = [];
 
   let query = `
-    SELECT articles.article_id, articles.body, articles.title, articles.topic, articles.author, articles.created_at, articles.article_img_url, articles.votes, CAST(COUNT(comments.article_id) AS INT) AS comment_count
+  SELECT articles.article_id, articles.body, articles.title, articles.topic, articles.author, articles.created_at, articles.article_img_url, articles.votes, CAST(COUNT(comments.article_id) AS INT) AS comment_count
     FROM articles
     LEFT JOIN comments 
-    ON articles.article_id = comments.article_id`;
+    ON articles.article_id = comments.article_id
+    `;
 
   if (topic) {
     query += `
@@ -108,7 +110,7 @@ exports.fetchArticles = (topic, sort_by, order) => {
   }
 
   query += `
-    GROUP BY articles.article_id, comments.article_id
+  GROUP BY articles.article_id, articles.body, articles.title, articles.topic, articles.author, articles.created_at, articles.article_img_url, articles.votes
     ORDER BY articles.${sort_by} ${order};`;
 
   return db.query(query, array);

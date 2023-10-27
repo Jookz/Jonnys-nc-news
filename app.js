@@ -16,6 +16,7 @@ const {
   deleteComment,
   getUsers,
   getSingleUser,
+  postUsername,
 } = require("./controllers/nc_news.controller.js");
 
 const app = express();
