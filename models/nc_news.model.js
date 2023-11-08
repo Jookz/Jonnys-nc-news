@@ -166,3 +166,19 @@ exports.fetchSingleUser = (username) => {
     return result;
   });
 };
+
+exports.editComment = ({ inc_votes }, comment_id) => {
+  const query = `
+  UPDATE comments
+    SET votes = votes + $1
+    WHERE comment_id = $2
+    RETURNING *
+  `;
+  return db.query(query, [inc_votes, comment_id]).then((result) => {
+    console.log(result);
+    if (result.rows.length === 0) {
+      return Promise.reject({ status: 404, msg: "Comment not found" });
+    }
+    return result;
+  });
+};

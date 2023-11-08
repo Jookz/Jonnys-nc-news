@@ -16,7 +16,7 @@ const {
   deleteComment,
   getUsers,
   getSingleUser,
-  postUsername,
+  patchComment,
 } = require("./controllers/nc_news.controller.js");
 
 const app = express();
@@ -44,6 +44,8 @@ app.delete("/api/comments/:comment_id", deleteComment);
 app.get("/api/users", getUsers);
 
 app.get("/api/users/:username", getSingleUser);
+
+app.patch("/api/comments/:comment_id", patchComment);
 
 app.all("/*", (req, res) => {
   res.status(404).send({ msg: "Path not found" });

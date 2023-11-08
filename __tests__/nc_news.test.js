@@ -505,3 +505,76 @@ describe("GET /api/users/:username", () => {
       });
   });
 });
+
+describe("PATCH, /api/comments/:comment_id", () => {
+  it("PATCH:201 should return 201 status code", () => {
+    return request(app)
+      .patch("/api/comments/1")
+      .send({ inc_votes: 1 })
+      .expect(201);
+  });
+  it("PATCH:201 should increment votes of passed article by the amount given in the req", () => {
+    return request(app)
+      .patch("/api/comments/1")
+      .send({ inc_votes: 2 })
+      .then(({ body }) => {
+        const templateComment = {
+          comment_id: 1,
+          body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+          article_id: 9,
+          author: "butter_bridge",
+          votes: 18,
+          created_at: "2020-04-06T12:17:00.000Z",
+        };
+        expect(body.updated_comment).toMatchObject(templateComment);
+      });
+  });
+  it("PATCH:404 should return error if article ID does not exist", () => {
+    return request(app)
+      .patch("/api/comments/9999")
+      .send({ inc_votes: 2 })
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Comment not found");
+      });
+  });
+  it("PATCH:400 should return error if given invalid article ID", () => {
+    return request(app)
+      .patch("/api/comments/hamsandwich")
+      .send({ inc_votes: 2 })
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request");
+      });
+  });
+  it("PATCH:400 should return error if given improperly formatted req", () => {
+    return request(app)
+      .patch("/api/comments/1")
+      .send({ inc_votes: "ello" })
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request");
+      });
+  });
+  it("PATCH:201 should ignore unecessary additional properties", () => {
+    return request(app)
+      .patch("/api/comments/1")
+      .send({
+        inc_votes: 3,
+        extra: 500,
+        extra2: "Hello fellow youngsters",
+      })
+      .then(({ body }) => {
+        const templateComment = {
+          comment_id: 1,
+          body: "Oh, I've got compassion running out of my nose, pal! I'm the Sultan of Sentiment!",
+          article_id: 9,
+          author: "butter_bridge",
+          votes: 19,
+          created_at: "2020-04-06T12:17:00.000Z",
+        };
+        const comment = body.updated_comment;
+        expect(comment).toMatchObject(templateComment);
+      });
+  });
+});

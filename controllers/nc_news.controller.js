@@ -8,6 +8,7 @@ const {
   editArticle,
   removeComment,
   fetchSingleUser,
+  editComment,
 } = require("../models/nc_news.model.js");
 const endpoints = require("../endpoints.json");
 const { error } = require("console");
@@ -105,6 +106,17 @@ exports.getSingleUser = (req, res, next) => {
   fetchSingleUser(username)
     .then(({ rows }) => {
       res.status(200).send(rows[0]);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.patchComment = (req, res, next) => {
+  const { comment_id } = req.params;
+  editComment(req.body, comment_id)
+    .then((response) => {
+      res.status(201).send({ updated_comment: response.rows[0] });
     })
     .catch((err) => {
       next(err);
